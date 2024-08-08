@@ -1,0 +1,65 @@
+#include<unordered_map>
+#include<vector>
+#include<set>
+#include<stack>
+void topoSort(unordered_map<int,set<int>>& adj,int node,
+unordered_map<int,bool>& vis,stack<int>& st){
+	vis[node]=true;
+	for(auto i:adj[node]){
+		if(!vis[i]){
+			topoSort(adj, i, vis, st);
+		}
+	}
+	st.push(node);
+}
+
+void reverseDfs(int top,unordered_map<int,set<int>>& transpose,
+unordered_map<int,bool>& vis){
+   vis[top]=true;
+   for(auto i:transpose[top]){
+	   if(!vis[i]){
+		   reverseDfs(i, transpose, vis);
+	   }
+   }
+}
+int stronglyConnectedComponents(int v, vector<vector<int>> &edges)
+{
+	unordered_map<int,set<int>>adj;
+	for(int i=0;i<edges.size();i++){
+		int u=edges[i][0];
+		int v=edges[i][1];
+
+		adj[u].insert(v);
+	}
+
+    unordered_map<int,bool>vis;
+	stack<int>st;
+	
+	//1 topological sort 
+	for(int i=0;i<v;i++){
+		if(!vis[i]){
+           topoSort(adj,i,vis,st);
+		}
+	}
+
+    //2 transpose
+    unordered_map<int,set<int>>transpose;
+	for(int i=0;i<v;i++){
+		vis[i]=false;
+		for(auto k:adj[i]){
+			transpose[k].insert(i);
+		}
+	}	
+
+	//3 cnt scc graph
+	int cnt=0;
+	while(!st.empty()){
+		int top=st.top();
+		st.pop();
+		if(!vis[top]){
+			cnt++;
+			reverseDfs(top,transpose,vis);
+		}
+	}
+	return cnt;
+}
