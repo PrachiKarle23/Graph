@@ -8,9 +8,7 @@ vector<pair<pair<int, int>, int>> calculatePrimsMST(int n, int m, vector<pair<pa
        int v=g[i].first.second;
        int w=g[i].second;
        adj[u].push_back(make_pair(v,w));
-         adj[v].push_back(make_pair(u,w));
-        
-
+       adj[v].push_back(make_pair(u,w));
     }
     vector<pair<pair<int, int>, int>>res;  
     vector<bool>mst(n+1,false);
