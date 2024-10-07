@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int findCenter(vector<vector<int>>& edges) {
+        // int n=edges.size();
+        // vector<int>indegree(n+1,0);
+        // for(auto node:edges)
+        // {
+        //     indegree[node[0]]--;
+        //     indegree[node[1]]++;
+        // }
+
+        // for(int i=1;i<=n;i++)
+        // {
+        //     if(indegree[i]==n-1)
+        //     {
+        //         return i;
+        //     }
+        // }
+        // return -1;
+         if (edges[0][0] == edges[1][0] || edges[0][0] == edges[1][1]) {
+            return edges[0][0];
+        } else {
+            return edges[0][1];
+        }
+        return -1;
+    }
+};
