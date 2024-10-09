@@ -1,0 +1,41 @@
+class Solution {
+public:
+    bool dfs(unordered_map<int,set<int>>& adj,vector<int>&visited,int node,int parent)
+    {
+         if(find(visited.begin(),visited.end(),node)!=visited.end())
+         {
+            return true;
+         }
+         visited.push_back(node);
+         for(auto i:adj[node])
+         {
+            if(i==parent){
+                continue;
+            }
+            if(dfs(adj,visited,i,node))
+            {
+                return true;
+            }
+         }
+         return false;
+    }
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        unordered_map<int,set<int>>adj;
+        int n=edges.size();
+        vector<int>visited;
+        for(int i=0;i<n;i++)
+        {
+            int u=edges[i][0];
+            int v=edges[i][1];
+
+            adj[u].insert(v);
+            adj[v].insert(u);
+
+            if(dfs(adj,visited,u,-1)){
+                return {u,v};
+            }
+            visited.clear();
+        }
+        return {};
+    }
+};
