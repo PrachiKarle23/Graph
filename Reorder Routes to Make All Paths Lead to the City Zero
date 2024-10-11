@@ -81,3 +81,32 @@ public:
         return cnt;
     }
 };
+
+
+//accepted solution of dfs
+class Solution {
+public:
+    int count=0;
+    void dfs(unordered_map<int,set<pair<int,int>>>& adj,int parent,int node)
+    {
+        for(auto i:adj[node])
+        {
+            if(i.first!=parent){
+                count+=i.second;
+                dfs(adj,node,i.first);
+            }
+        }
+    }
+    int minReorder(int n, vector<vector<int>>& connections) {
+        unordered_map<int,set<pair<int,int>>>adj;
+        for(int i=0;i<connections.size();i++)
+        {
+            int u=connections[i][0];
+            int v=connections[i][1];
+            adj[u].insert(make_pair(v,1));
+            adj[v].insert(make_pair(u,0));
+        }
+        dfs(adj,-1,0);
+        return count;
+    }
+};
