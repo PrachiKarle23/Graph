@@ -1,0 +1,46 @@
+//TLE
+class Solution {
+public:
+    unordered_map<int, int> mp;
+    void dfs(unordered_map<int, set<pair<int, int>>>& adj, int node, int dst,
+             vector<int>& vis, int sum) {
+
+        if (find(vis.begin(), vis.end(), node) == vis.end()) {
+            vis.push_back(node);
+        }
+
+        if (node == dst) {
+            mp[sum]++;
+        } else {
+            for (auto i : adj[node]) {
+                if (find(vis.begin(), vis.end(), i.first) == vis.end()) {
+
+                    int original_sum = sum;
+                    sum += i.second;
+                    dfs(adj, i.first, dst, vis, sum);
+                    sum = original_sum;
+                }
+            }
+        }
+
+        vis.pop_back();
+    }
+    int countPaths(int n, vector<vector<int>>& roads) {
+        unordered_map<int, set<pair<int, int>>> adj;
+        for (int i = 0; i < roads.size(); i++) {
+            int u = roads[i][0];
+            int v = roads[i][1];
+            int w = roads[i][2];
+            adj[u].insert(make_pair(v, w));
+            adj[v].insert(make_pair(u, w));
+        }
+        vector<int> vis;
+        
+        dfs(adj, 0, n - 1, vis, 0);
+        int mini=INT_MAX;
+        for(auto i:mp){
+            mini=min(mini,i.first);
+        }
+        return mp[mini];
+    }
+};
