@@ -1,0 +1,46 @@
+class Solution {
+public:
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        
+        int n=graph.size();
+        vector<vector<int>>adj(n);
+         queue<int>q;
+         vector<int>outdegree(n);
+        for(int i=0;i<n;i++)
+        {
+            for(int v:graph[i])
+            {
+                adj[v].push_back(i);
+            }
+            outdegree[i]=graph[i].size();
+            if(outdegree[i]==0)
+            {
+                q.push(i);
+            }
+        }
+        vector<bool>safe(n,false);
+        while(!q.empty())
+        {
+            int ft=q.front();
+            q.pop();
+            safe[ft]=true;
+
+            for(int v:adj[ft])
+            {
+                if(--outdegree[v]==0)
+                {
+                   q.push(v);
+                }
+            }
+        }
+        vector<int>ans;
+        for(int i=0;i<n;i++)
+        {
+            if(safe[i])
+            {
+                ans.push_back(i);
+            }
+        }
+        return ans;
+    }
+};
