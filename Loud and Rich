@@ -1,0 +1,46 @@
+class Solution {
+public:
+    void dfs(unordered_map<int,set<int>>& adj,int node,vector<bool>& visited,
+    vector<int>& quiet, int &res,int &resNode)
+    {
+        visited[node]=true;
+
+        for(auto i:adj[node])
+        {
+            if(!visited[i])
+            {
+                if(res>quiet[i]){
+                    res=quiet[i];
+                    resNode=i;
+                }
+                dfs(adj,i,visited,quiet,res,resNode);
+            }
+        }
+    }
+    vector<int> loudAndRich(vector<vector<int>>& richer, vector<int>& quiet) {
+        int n=quiet.size();
+        vector<int>ans;
+        unordered_map<int,set<int>>adj;
+        for(int i=0;i<richer.size();i++)
+        {
+            int u=richer[i][0];
+            int v=richer[i][1];
+            adj[v].insert(u);
+        }
+
+        for(int i=0;i<n;i++)
+        {
+            int res=INT_MAX;
+            int resNode=i;
+            vector<bool>visited(n,false);
+            dfs(adj,i,visited,quiet,res,resNode);
+            if(res>quiet[i]){
+                ans.push_back(i);
+            }
+            else{
+                ans.push_back(resNode);
+            }
+        }
+        return ans;
+    }
+};
