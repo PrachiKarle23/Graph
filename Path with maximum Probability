@@ -1,0 +1,47 @@
+class Solution {
+public:
+    double ans = 0;
+    void dfs(unordered_map<int, set<pair<int, double>>>& adj, int start,
+             int end, vector<bool>& visited, vector<double> a) {
+
+        visited[start] = true;
+        if (start == end) {
+            double res = 1;
+            for (int i = 0; i < a.size(); i++) {
+                res = res * a[i];
+            }
+            ans = max(ans, res);
+        } else {
+            for (auto i : adj[start]) {
+                if (!visited[i.first]) {
+                    a.push_back(i.second);
+                    dfs(adj, i.first, end, visited, a);
+                    a.pop_back();
+                }
+            }
+        }
+        visited[start] = false;
+    }
+    double maxProbability(int n, vector<vector<int>>& edges,
+                          vector<double>& succProb, int start_node,
+                          int end_node) {
+
+        unordered_map<int, set<pair<int, double>>> adj;
+        int m = edges.size();
+
+        for (int i = 0; i < m; i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            double w = succProb[i];
+            adj[u].insert({v, w});
+            adj[v].insert({u, w});
+        }
+
+        vector<bool> visited(n, false);
+
+        vector<double> a;
+        dfs(adj, start_node, end_node, visited, a);
+
+        return ans;
+    }
+};
