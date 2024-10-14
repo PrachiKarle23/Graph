@@ -1,0 +1,73 @@
+class Solution {
+public:
+    int cnt = 0;
+    void dijikstra(int node, unordered_map<int, set<pair<int, int>>>& adj,
+                   int n, unordered_map<int,int>& ans) {
+
+        priority_queue<pair<int, int>, vector<pair<int, int>>,
+                       greater<pair<int, int>>>
+            pq;
+        pq.push({0, node});
+
+        vector<int> dist(n + 1, INT_MAX);
+
+        while (!pq.empty()) {
+            auto top = pq.top();
+            pq.pop();
+
+            int n = top.second;
+            int nodeDist = top.first;
+
+            for (auto i : adj[n]) {
+                if (i.second + nodeDist < dist[i.first]) {
+                    dist[i.first] = i.second + nodeDist;
+                    pq.push({dist[i.first], i.first});
+                }
+            }
+        }
+        ans[node]=dist[n];
+    }
+
+    void dfs(int s, int e, unordered_map<int, set<pair<int, int>>>& adj,
+             unordered_map<int,int>& ans, vector<bool>& visited) {
+
+        visited[s] = true;
+        cout<<s<<" ";
+        if (s == e) {
+            cnt++;
+            cout<<endl;
+        } 
+        else {
+            for (auto i : adj[s]) {
+                if(!visited[i.first] && ans[i.first]<ans[s])
+                {
+                    dfs(i.first,e,adj,ans,visited);
+                }
+            }
+        }
+        visited[s] = false;
+    }
+
+    int countRestrictedPaths(int n, vector<vector<int>>& edges) {
+        unordered_map<int, set<pair<int, int>>> adj;
+        for (int i = 0; i < edges.size(); i++) {
+            int u = edges[i][0];
+            int v = edges[i][1];
+            int w = edges[i][2];
+
+            adj[u].insert(make_pair(v, w));
+            adj[v].insert(make_pair(u, w));
+        }
+
+        unordered_map<int,int> ans;
+        for (int i = 1; i < n; i++) {
+            dijikstra(i, adj, n, ans);
+        }
+        ans[n]=0;
+
+        vector<bool> visited(n + 1, false);
+        dfs(1, n, adj, ans, visited);
+
+        return cnt;
+    }
+};
