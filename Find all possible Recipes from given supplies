@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<string> findAllRecipes(vector<string>& recipes,
+                                  vector<vector<string>>& ingredients,
+                                  vector<string>& supplies) {
+
+        unordered_map<string, set<string>> adj;
+        for (int i = 0; i < recipes.size(); i++) {
+            for (int j = 0; j < ingredients[i].size(); j++) {
+                adj[recipes[i]].insert(ingredients[i][j]);
+            }
+        }
+
+        vector<string> ans;
+        for(int i=0;i<recipes.size();i++)
+        {
+            bool flag=true;
+            for(auto j:adj[recipes[i]])
+            {
+                if(find(supplies.begin(),supplies.end(),j)==supplies.end()){
+                    flag=false;
+                }
+            }
+            if(flag)
+            {
+                ans.push_back(recipes[i]);
+                supplies.push_back(recipes[i]);
+            }
+        }
+        return ans;
+    }
+};
