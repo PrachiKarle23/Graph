@@ -1,0 +1,41 @@
+class Solution {
+public:
+    void solve(vector<int>& dist, vector<int>& edges, int node1,
+               vector<bool>& visited, int cnt) {
+
+        visited[node1] = true;
+
+        if (edges[node1] != -1 && !visited[edges[node1]]) {
+            cnt++;
+            dist[edges[node1]] = cnt;
+            solve(dist, edges, edges[node1], visited, cnt);
+        }
+    }
+    
+    int closestMeetingNode(vector<int>& edges, int node1, int node2) {
+        int n = edges.size();
+
+        vector<bool> visited1(n, false), visited2(n, false);
+        vector<int> dist1(n, 0), dist2(n, 0);
+
+        int cnt = 0;
+        dist1[node1] = 0;
+        solve(dist1, edges, node1, visited1, cnt);
+
+        dist2[node2] = 0;
+        cnt = 0;
+        solve(dist2, edges, node2, visited2, cnt);
+
+        int ans = -1, minDist = INT_MAX;
+
+        for (int i = 0; i < n; i++) {
+            if (visited1[i] == true && visited2[i] == true &&
+                minDist > max(dist1[i], dist2[i])) {
+
+                minDist = max(dist1[i], dist2[i]);
+                ans = i;
+            }
+        }
+        return ans;
+    }
+};
