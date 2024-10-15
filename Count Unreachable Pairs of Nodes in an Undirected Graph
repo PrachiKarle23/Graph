@@ -1,0 +1,35 @@
+class Solution {
+public:
+    void solve(unordered_map<int,set<int>>& adj,int node,vector<bool>& visited,long long &cnt)
+    {
+       visited[node]=true;
+       for(auto i:adj[node])
+       {
+        if(!visited[i])
+        {
+            cnt++;
+            solve(adj,i,visited,cnt);
+        }
+       }
+    }
+    long long countPairs(int n, vector<vector<int>>& edges) {
+        unordered_map<int,set<int>>adj;
+        for(int i=0;i<edges.size();i++)
+        {
+            adj[edges[i][0]].insert(edges[i][1]);
+            adj[edges[i][1]].insert(edges[i][0]);
+        }
+        long long ans=0;
+        for(int i=0;i<n;i++)
+        {
+            vector<bool>visited(n,false);
+            long long cnt=0;
+            solve(adj,i,visited,cnt);
+            ans+=(n-1-cnt);
+        }
+        if(ans!=0){
+            ans=ans/2;
+        }
+        return ans;
+    }
+};
