@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<int> fl;
+    void dfs(int node, int end, unordered_map<int, set<pair<int, int>>>& adj,
+             vector<bool>& visited, int& mini) {
+        visited[node] = true;
+        if (node == end) {
+            fl.push_back(mini);
+        }
+        for (auto i : adj[node]) {
+            if (!visited[i.first]) {
+                if (mini > i.second) {
+                    mini = i.second;
+                }
+                dfs(i.first, end, adj, visited, mini);
+            }
+        }
+        visited[node] = false;
+    }
+    int minScore(int n, vector<vector<int>>& roads) {
+        unordered_map<int, set<pair<int, int>>> adj;
+        for (int i = 0; i < roads.size(); i++) {
+            int u = roads[i][0];
+            int v = roads[i][1];
+            int w = roads[i][2];
+            adj[u].insert(make_pair(v, w));
+            adj[v].insert(make_pair(u, w));
+        }
+
+        vector<bool> visited(n + 1, false);
+        int mini = INT_MAX;
+        dfs(1, n, adj, visited, mini);
+
+        int ans = INT_MAX;
+        for (int i = 0; i < fl.size(); i++) {
+            ans = min(ans, fl[i]);
+        }
+        return ans;
+    }
+};
