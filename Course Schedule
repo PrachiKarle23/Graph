@@ -7,7 +7,7 @@ public:
         {
            int u=prerequisites[i][0];
            int v=prerequisites[i][1];
-           adj[u].insert(v);
+           adj[v].insert(u);
         }
 
         vector<int>indegree(numCourses);
